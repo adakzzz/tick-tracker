@@ -1,4 +1,4 @@
-package com.ruideng.tick_tracker.controller;
+package com.tick_tracker.controller;
 
 import java.util.Map;
 
