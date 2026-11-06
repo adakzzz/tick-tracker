@@ -25,10 +25,10 @@ public class Sighting {
     private String latinName;
 
     protected Sighting() {
-
+        // JPA needs this to create the object when loading a row
     }
 
-    public Sighting(String id, String location, LocalDateTime dateTime, String species, String latinName){
+    public Sighting(String id, String location, LocalDateTime dateTime, String species, String latinName) {
         this.id = id;
         this.location = location;
         this.dateTime = dateTime;
@@ -46,15 +46,16 @@ public class Sighting {
         return location;
     }
 
-    public String getLatinName() {
-        return latinName;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     public String getSpecies() {
         return species;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public String getLatinName() {
+        return latinName;
     }
+
 }
