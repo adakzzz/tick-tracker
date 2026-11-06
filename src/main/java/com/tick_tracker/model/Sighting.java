@@ -6,13 +6,13 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity //this tells JPA to make database table for this class
 public class Sighting {
 
-    @Id
+    @Id  //Primary Key
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false) //Column here makes the database reject row where value is missing(same with the others fields)
     private String location;
 
     @Column(nullable = false)
@@ -25,7 +25,7 @@ public class Sighting {
     private String latinName;
 
     protected Sighting() {
-        // JPA needs this to create the object when loading a row
+        // JPA needs this empty constructor to create the object when loading a row
     }
 
     public Sighting(String id, String location, LocalDateTime dateTime, String species, String latinName) {

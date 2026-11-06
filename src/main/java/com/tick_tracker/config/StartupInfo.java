@@ -1,5 +1,6 @@
 package com.tick_tracker.config;
 
+import com.tick_tracker.repository.SightingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StartupInfo {
-
+    private final SightingRepository sightingRepository;
     private static final Logger log = LoggerFactory.getLogger(StartupInfo.class);
 
     @Value("${server.port}")
@@ -18,6 +19,11 @@ public class StartupInfo {
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
 
+
+    public StartupInfo(SightingRepository sightingRepository) {
+        this.sightingRepository = sightingRepository;
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void printLinks() {
         String base = "http://localhost:" + port;
@@ -25,6 +31,7 @@ public class StartupInfo {
         log.info(" Tick Tracker is running");
         log.info("   Health:     {}/health", base);
         log.info("   H2 console: {}/h2-console  (JDBC URL: {}, user: sa)", base, jdbcUrl);
+        log.info(" Sightings in database: {}", sightingRepository.count());
         log.info("=========================================================");
     }
 }
