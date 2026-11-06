@@ -27,7 +27,6 @@ public class StartupInfo {
         this.tickApiClient = tickApiClient;
     }
 
-
     @EventListener(ApplicationReadyEvent.class)
     public void printLinks() {
         String base = "http://localhost:" + port;
@@ -38,5 +37,6 @@ public class StartupInfo {
         log.info(" Sightings in database: {}", sightingRepository.count());
         log.info("   Fetched from Elanco API: {}", tickApiClient.fetchAllSightings().size());
         log.info("=========================================================");
+
     }
 }
