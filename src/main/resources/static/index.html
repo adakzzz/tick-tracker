@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tick Tracker API</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #2f6f4f;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2f6f4f;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .method {
+            display: inline-block;
+            background-color: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        a {
+            color: #2f6f4f;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .base-url {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tick Tracker API</h1>
+
+        <div class="base-url">
+            <strong>Base URL:</strong> http://localhost:8080
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Route</th>
+                    <th>Description</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="method">GET</span></td>
+                    <td>/health</td>
+                    <td>Check the app is running</td>
+                    <td><a href="/health">Try it</a></td>
+                </tr>
+                <tr>
+                    <td><span class="method">GET</span></td>
+                    <td>/sightings</td>
+                    <td>Search sightings (optional ?location=&amp;from=YYYY-MM-DD&amp;to=YYYY-MM-DD)</td>
+                    <td><a href="/sightings">Try it</a> | <a href="/sightings?from=2022-01-01&to=2022-12-31">2022 only</a></td>
+                </tr>
+                <tr>
+                    <td><span class="method">GET</span></td>
+                    <td>/stats/regions</td>
+                    <td>Number of sightings per region</td>
+                    <td><a href="/stats/regions">Try it</a></td>
+                </tr>
+                <tr>
+                    <td><span class="method">GET</span></td>
+                    <td>/stats/trends</td>
+                    <td>Sightings over time (?period=weekly or monthly)</td>
+                    <td><a href="/stats/trends?period=monthly">monthly</a> | <a href="/stats/trends?period=weekly">weekly</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><a href="/h2-console" target="_blank">Open the H2 console</a> (JDBC URL: jdbc:h2:mem:ticks, user: sa, no password)</p>
+    </div>
+</body>
+
+</html>
