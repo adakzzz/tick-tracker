@@ -1,51 +1,58 @@
 package com.tick_tracker.service;
 
-import com.tick_tracker.client.SightingApiDto;
-import com.tick_tracker.client.TickApiClient;
-import com.tick_tracker.model.Sighting;
-import com.tick_tracker.repository.SightingRepository;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.tick_tracker.client.SightingApiDto;
+import com.tick_tracker.client.TickApiClient;
+import com.tick_tracker.client.TickApiException;
+import com.tick_tracker.model.Sighting;
+import com.tick_tracker.repository.SightingRepository;
 
 @Service
 public class IngestionService {
 
     private static final Logger log = LoggerFactory.getLogger(IngestionService.class);
-    private final TickApiClient tickApiClient;
-    private final SightingRepository sightingRepository;
-    private final SightingCleaner sightingCleaner;
 
-    public IngestionService(TickApiClient tickApiClient, SightingRepository sightingRepository, SightingCleaner sightingCleaner) {
+    private final TickApiClient tickApiClient;
+    private final SightingCleaner sightingCleaner;
+    private final SightingRepository sightingRepository;
+    private final boolean ingestOnStartup;
+
+    public IngestionService(TickApiClient tickApiClient, SightingCleaner sightingCleaner, SightingRepository sightingRepository, @Value("${tick.ingest.on-startup:true}") boolean ingestOnStartup) {
         this.tickApiClient = tickApiClient;
-        this.sightingRepository = sightingRepository;
         this.sightingCleaner = sightingCleaner;
+        this.sightingRepository = sightingRepository;
+        this.ingestOnStartup = ingestOnStartup;
     }
 
-    //API -> convert -> database
     @EventListener(ApplicationReadyEvent.class)
-    public void ready() {
-        List< SightingApiDto> records = tickApiClient.fetchAllSightings();
-        List<Sighting> sightings = sightingCleaner.clean(records);
-        for (SightingApiDto record : records){
-            sightings.add(toSighting(record));
+    public void onStartup() {
+        if (!ingestOnStartup) {
+            log.info("Startup ingestion is turned off");
+            return;
+        }
+        ingest();
+    }
+
+    // API -> clean -> database
+    public void ingest() {
+        List<SightingApiDto> records;
+        try {
+            records = tickApiClient.fetchAllSightings();
+        } catch (TickApiException e) {
+            log.error("Could not load sightings from the Elanco API: {}. Running with {} sightings in the database.", e.getMessage(), sightingRepository.count());
+            return;
         }
 
+        List<Sighting> sightings = sightingCleaner.clean(records);
         sightingRepository.saveAll(sightings);
-        log.info("Ingestion finished: fetched {} records, database now has {} sightings",
-                records.size(), sightingRepository.count());
-    }
-
-    // Turns one API record into a database entity
-    private Sighting toSighting(SightingApiDto record) {
-        LocalDateTime dateTime = LocalDateTime.parse(record.date());
-        return new Sighting(record.id(), record.location(), dateTime, record.species(), record.latinName());
+        log.info("Ingestion finished: fetched {} records, database now has {} sightings", records.size(), sightingRepository.count());
     }
 }
-
