@@ -23,7 +23,7 @@ public class StartupInfo {
         String base = "http://localhost:" + port;
         log.info("=========================================================");
         log.info(" Tick Tracker is running");
-        log.info("   Local:      http://localhost:" + port);
+        log.info("   Home:       {}", base);
         log.info("   Health:     {}/health", base);
         log.info("   H2 console: {}/h2-console  (JDBC URL: {}, user: sa)", base, jdbcUrl);
         log.info("=========================================================");
