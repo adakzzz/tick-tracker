@@ -20,17 +20,19 @@ public class IngestionService {
     private static final Logger log = LoggerFactory.getLogger(IngestionService.class);
     private final TickApiClient tickApiClient;
     private final SightingRepository sightingRepository;
+    private final SightingCleaner sightingCleaner;
 
-    public IngestionService(TickApiClient tickApiClient, SightingRepository sightingRepository) {
+    public IngestionService(TickApiClient tickApiClient, SightingRepository sightingRepository, SightingCleaner sightingCleaner) {
         this.tickApiClient = tickApiClient;
         this.sightingRepository = sightingRepository;
+        this.sightingCleaner = sightingCleaner;
     }
 
     //API -> convert -> database
     @EventListener(ApplicationReadyEvent.class)
     public void ready() {
         List< SightingApiDto> records = tickApiClient.fetchAllSightings();
-        List<Sighting> sightings = new ArrayList<>();
+        List<Sighting> sightings = sightingCleaner.clean(records);
         for (SightingApiDto record : records){
             sightings.add(toSighting(record));
         }
