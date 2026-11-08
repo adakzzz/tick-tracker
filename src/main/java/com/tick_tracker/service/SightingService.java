@@ -20,6 +20,9 @@ public class SightingService {
 
     // Turns the user's filters into a precise database query
     public List<Sighting> search(String location, LocalDate from, LocalDate to) {
+        if (from != null && to != null && from.isAfter(to)) {
+            throw new IllegalArgumentException("'from' must be on or before 'to'");
+        }
         String cleanLocation = (location == null || location.isBlank()) ? null : location.trim();
         LocalDateTime fromTime = (from == null) ? null : from.atStartOfDay();
         LocalDateTime toTime = (to == null) ? null : to.plusDays(1).atStartOfDay();
