@@ -107,7 +107,7 @@
                     <td><span class="method">GET</span></td>
                     <td>/sightings</td>
                     <td>Search sightings (optional ?location=&amp;from=YYYY-MM-DD&amp;to=YYYY-MM-DD)</td>
-                    <td><a href="/sightings">Try it</a> | <a href="/sightings?from=2022-01-01&to=2022-12-31">2022 only</a></td>
+                    <td><a href="/sightings">Try it</a> | <a href="/sightings?location=london&from=2022-01-01&to=2022-12-31">London in 2022</a></td>
                 </tr>
                 <tr>
                     <td><span class="method">GET</span></td>
@@ -120,6 +120,12 @@
                     <td>/stats/trends</td>
                     <td>Sightings over time (?period=weekly or monthly)</td>
                     <td><a href="/stats/trends?period=monthly">monthly</a> | <a href="/stats/trends?period=weekly">weekly</a></td>
+                </tr>
+                <tr>
+                    <td><span class="method">GET</span></td>
+                    <td>Errors</td>
+                    <td>Bad requests return a 400 with a clear message</td>
+                    <td><a href="/sightings?from=banana">Bad date</a> | <a href="/sightings?from=2023-01-01&to=2022-01-01">from after to</a></td>
                 </tr>
             </tbody>
         </table>
