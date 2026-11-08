@@ -3,6 +3,7 @@ package com.tick_tracker.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.tick_tracker.dto.RegionCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,4 +21,13 @@ public interface SightingRepository extends JpaRepository<Sighting, String> {
             ORDER BY s.dateTime DESC
             """)
     List<Sighting> search(String location, LocalDateTime from, LocalDateTime to);
+
+    // Counts sightings per city, busiest first
+    @Query("""
+            SELECT new com.tick_tracker.dto.RegionCount(s.location, COUNT(s))
+            FROM Sighting s
+            GROUP BY s.location
+            ORDER BY COUNT(s) DESC, s.location
+            """)
+    List<RegionCount> countByRegion();
 }
