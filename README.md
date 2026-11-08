@@ -4,6 +4,8 @@ An MVP backend for a UK tick-sightings app, built for the Elanco placement techn
 
 It loads tick sightings from the Elanco API, cleans them, stores them in a local database and serves them through a REST API. The API supports search by location and date range, a count of sightings per region, and weekly or monthly trends.
 
+**Walkthrough video:** https://youtu.be/9BVeC-X5wAA
+
 ---
 
 ## How to run it
